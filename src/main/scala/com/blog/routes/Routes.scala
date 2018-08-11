@@ -6,14 +6,19 @@ import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.blog.engine._
+import com.blog.viewmodel._
+import spray.json._
 
-trait Routes {
+trait Routes extends JsonSupport {
   implicit def system: ActorSystem
   def log: LoggingAdapter = Logging(system, this.getClass)
 
   lazy val route: Route = concat (
-    index,
-    js
+    home,
+    about,
+    js,
+    dataHome,
+    dataAbout
   )
 
   private lazy val nashorn: JavaScriptEngine = new NashornEngine(
@@ -24,13 +29,51 @@ trait Routes {
     )
   )
 
-  private val index: Route = {
+  private val home: Route = {
     pathEndOrSingleSlash {
       get {
-        val content = nashorn.invokeMethod[String]("frontend", "renderServer", "Hello World")
-        val data = "\"Hello World\""
-        val html = views.html.index.render(content, data)
-        complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, html.toString()))
+        val model = HomeViewModel("This is Home page").toJson.compactPrint
+        val content = nashorn.invokeMethod[String]("frontend", "renderServer", "/", model)
+        val html = views.html.index.render(content, model).toString()
+        log.info(s"Request: route=/, method=get")
+        complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, html))
+      }
+    }
+  }
+
+  private val about: Route = {
+    path("about") {
+      pathEndOrSingleSlash {
+        get {
+          val model = AboutViewModel("About page").toJson.compactPrint
+          val content = nashorn.invokeMethod[String]("frontend", "renderServer", "/about", model)
+          val html = views.html.index.render(content, model).toString()
+          log.info(s"Request: route=/about, method=get")
+          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, html))
+        }
+      }
+    }
+  }
+
+  private val dataHome: Route = {
+    path("data" / "home") {
+      pathEndOrSingleSlash {
+        get {
+          val model = HomeViewModel("This is Home page").toJson.compactPrint
+          log.info(s"Request: route=/data/home, method=get")
+          complete(HttpEntity(ContentTypes.`application/json`, model))
+        }
+      }
+    }
+  }
+  private val dataAbout: Route = {
+    path("data" / "about") {
+      pathEndOrSingleSlash {
+        get {
+          val model = AboutViewModel("About page").toJson.compactPrint
+          log.info(s"Request: route=/data/about, method=get")
+          complete(HttpEntity(ContentTypes.`application/json`, model))
+        }
       }
     }
   }
