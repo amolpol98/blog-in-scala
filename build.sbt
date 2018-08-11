@@ -13,3 +13,5 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-actor"  % akkaVersion
   )
 }
+
+enablePlugins(SbtTwirl)

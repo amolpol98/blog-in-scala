@@ -15,11 +15,18 @@ object Main extends App {
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
   val route =
-    path("hello") {
-      get {
-        complete(HttpEntity(ContentTypes.`text/html(UTF-8)`,  "<h1>Hello world</h1>"))
+    concat(
+      path("hello") {
+        get {
+          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`,  "<h1>Hello world</h1>"))
+        }
+      }, path("") {
+        get {
+          val content = views.html.index.render()
+          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, content.toString()))
+        }
       }
-    }
+    )
 
   val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
   println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
