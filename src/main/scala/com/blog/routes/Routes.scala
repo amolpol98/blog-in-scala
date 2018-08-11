@@ -21,7 +21,7 @@ trait Routes extends JsonSupport {
     dataAbout
   )
 
-  private lazy val nashorn: JavaScriptEngine = new NashornEngine(
+  private lazy val nashorn: JavaScriptEngine = NashornEngine(
     Seq(
       ScriptURL(getClass.getResource("/webapp/js/polyfill/nashorn-polyfill.js")),
       ScriptURL(getClass.getResource("/webapp/js/bundle.js")),
