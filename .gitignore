@@ -32,3 +32,7 @@ pubsub/target
 *.iws
 .*.sw?
 .idea
+
+# generated front-end files
+src/main/webapp/*
+src/main/node/node_modules/*
