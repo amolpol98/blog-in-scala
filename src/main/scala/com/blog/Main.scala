@@ -2,37 +2,39 @@ package com.blog
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model._
-import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
+import akka.event.Logging
+import akka.http.scaladsl.server.Route
 
-import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.io.StdIn
 
+import routes.Routes
+
 object Main extends App {
+  private val server = WebServer()
+  server.start(Routes.route)
+  StdIn.readLine() // let it run until user presses return
+  server.stop()
+}
+
+final case class WebServer() {
   implicit val system: ActorSystem = ActorSystem("blog")
   implicit val materializer: ActorMaterializer = ActorMaterializer()
+  // needed for the future flatMap/onComplete in the end
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
-  val route =
-    concat(
-      path("hello") {
-        get {
-          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`,  "<h1>Hello world</h1>"))
-        }
-      }, path("") {
-        get {
-          val content = views.html.index.render()
-          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, content.toString()))
-        }
-      }
-    )
+  private var server: Future[Http.ServerBinding] = _
+  private lazy val log = Logging(system, classOf[WebServer])
 
-  val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
-  println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
-  StdIn.readLine()  // let it run intil user presses return
-  println("Return pressed")
-  bindingFuture
-    .flatMap(_.unbind())    // trigger unbinding from the port
-    .onComplete(_ => system.terminate())  // and shutdown when done
+  def start(route: Route) = {
+    server = Http().bindAndHandle(route, "localhost", 8080)
+    log.info(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
+  }
+
+  def stop() = {
+    server
+      .flatMap(_.unbind())                  // trigger unbinding from the port
+      .onComplete(_ => system.terminate())  // and shutdown when done
+  }
 }
