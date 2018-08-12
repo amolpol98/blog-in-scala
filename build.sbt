@@ -10,10 +10,12 @@ libraryDependencies ++= {
   val akkaVersion = "2.5.13"
   val akkaHttpVersion = "10.1.1"
   Seq(
-    "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
     "com.typesafe.akka" %% "akka-stream" % akkaVersion,
     "com.typesafe.akka" %% "akka-actor"  % akkaVersion,
+    "com.typesafe.akka" %% "akka-slf4j"  % akkaVersion,
+    "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
     "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
+    "ch.qos.logback" % "logback-classic" % "1.2.3",
     "org.apache.commons" % "commons-pool2" % "2.4.3"
   )
 }
