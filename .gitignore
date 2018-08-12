@@ -6,7 +6,7 @@
 *.out
 
 # akka specific
-logs/*
+log/*
 
 # sbt specific
 target/
