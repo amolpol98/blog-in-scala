@@ -29,7 +29,8 @@ final case class WebServer() extends Routes {
     log.info(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
   }
 
-  def stop() = {
+  override def stop(): Unit = {
+    super.stop()
     server
       .flatMap(_.unbind())                  // trigger unbinding from the port
       .onComplete(_ => system.terminate())  // and shutdown when done

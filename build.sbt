@@ -13,7 +13,8 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
     "com.typesafe.akka" %% "akka-stream" % akkaVersion,
     "com.typesafe.akka" %% "akka-actor"  % akkaVersion,
-    "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion
+    "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
+    "org.apache.commons" % "commons-pool2" % "2.4.3"
   )
 }
 

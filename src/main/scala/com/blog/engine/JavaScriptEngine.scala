@@ -1,5 +1,12 @@
-package com.blog.engine
+package com.blog.web.engine
 
-abstract class JavaScriptEngine(scripts: Seq[ScriptSource]) {
+import com.blog.engine.ScriptSource
+
+abstract class JavaScriptEngine {
+  def registerScripts(scripts: Seq[ScriptSource]): JavaScriptEngine
   def invokeMethod[T](objectName: String, methodName: String, args: Any*): T
+  def build: JavaScriptEngine
+  def destroy: Unit = {
+
+  }
 }
