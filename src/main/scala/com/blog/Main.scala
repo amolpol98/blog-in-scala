@@ -8,7 +8,6 @@ import com.blog.routes.Routes
 
 import scala.concurrent.{Await, ExecutionContextExecutor}
 import scala.util.{Failure, Success}
-import scala.concurrent.duration._
 
 
 object Main extends App {

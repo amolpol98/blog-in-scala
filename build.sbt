@@ -17,7 +17,9 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion,
     "ch.qos.logback" % "logback-classic" % "1.2.3",
     "org.apache.commons" % "commons-pool2" % "2.4.3",
-    "com.github.pureconfig" %% "pureconfig" % "0.8.0"
+    "com.github.pureconfig" %% "pureconfig" % "0.8.0",
+    "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion % "test",
+    "org.scalatest" %% "scalatest" % "3.0.4" % "test"
   )
 }
 
