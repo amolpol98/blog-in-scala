@@ -25,7 +25,7 @@ final case class WebServer() extends Routes {
   private var server: Future[Http.ServerBinding] = _
 
   def start() = {
-    server = Http().bindAndHandle(route, "localhost", 8080)
+    server = Http().bindAndHandle(routes, "0.0.0.0", 8080)
     log.info(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
   }
 
