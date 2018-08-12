@@ -21,16 +21,16 @@ trait Routes extends JsonSupport {
     dataRoutes,
   )
 
-  lazy val pageRoutes: Route = concat(
+  private lazy val pageRoutes: Route = concat(
     home,
     about
   )
 
-  lazy val resourceRoutes: Route = concat(
+  private lazy val resourceRoutes: Route = concat(
     js
   )
 
-  lazy val dataRoutes: Route = concat(
+  private lazy val dataRoutes: Route = concat(
     dataHome,
     dataAbout
   )

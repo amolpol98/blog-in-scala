@@ -21,14 +21,11 @@ final case class WebServer() extends Routes {
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   // needed for the future flatMap/onComplete in the end
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
-
-  val bindingAddress = "0.0.0.0"
-  val bindingPort = 8080
-  val shutdownTimeout = 60
+  private val config: ServerConfig = ServerConfig.config
 
   def start() = {
-    log.info(s"Starting server on $bindingAddress:$bindingPort")
-    Http().bindAndHandle(routes, bindingAddress, bindingPort)
+    log.info(s"Starting server on ${config.bindingAddress}:${config.bindingPort}")
+    Http().bindAndHandle(routes, config.bindingAddress, config.bindingPort)
       .onComplete{
         case Success(binding) =>
           val address = binding.localAddress
@@ -44,7 +41,7 @@ final case class WebServer() extends Routes {
     log.info("Server is being shut down")
     super.stop()
     system.terminate()
-    Await.result(system.whenTerminated, shutdownTimeout seconds)
+    Await.result(system.whenTerminated, config.shutdownTimeout)
   }
 
   private def registerShutdownHook(binding: ServerBinding) = {
