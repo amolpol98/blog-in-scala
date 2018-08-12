@@ -46,9 +46,10 @@ trait Routes extends JsonSupport {
   private val home: Route = {
     pathEndOrSingleSlash {
       get {
-        val model = HomeViewModel("This is Home page").toJson.compactPrint
-        val content = renderer.invokeMethod[String]("frontend", "renderServer", "/", model)
-        val html = views.html.index.render(content, model).toString()
+        val model = new HomeViewModel("This is Home page")
+        val data = model.toJson.compactPrint
+        val content = renderer.invokeMethod[String]("frontend", "renderServer", "/", data)
+        val html = views.html.index.render(content, data, model.title).toString()
         log.info(s"Request: route=/, method=get")
         complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, html))
       }
@@ -59,9 +60,10 @@ trait Routes extends JsonSupport {
     path("about") {
       pathEndOrSingleSlash {
         get {
-          val model = AboutViewModel("About page").toJson.compactPrint
-          val content = renderer.invokeMethod[String]("frontend", "renderServer", "/about", model)
-          val html = views.html.index.render(content, model).toString()
+          val model = new AboutViewModel("About page")
+          val data = model.toJson.compactPrint
+          val content = renderer.invokeMethod[String]("frontend", "renderServer", "/about", data)
+          val html = views.html.index.render(content, data, model.title).toString()
           log.info(s"Request: route=/about, method=get")
           complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, html))
         }
@@ -73,9 +75,9 @@ trait Routes extends JsonSupport {
     path("data" / "home") {
       pathEndOrSingleSlash {
         get {
-          val model = HomeViewModel("This is Home page").toJson.compactPrint
+          val data = new HomeViewModel("This is Home page").toJson.compactPrint
           log.info(s"Request: route=/data/home, method=get")
-          complete(HttpEntity(ContentTypes.`application/json`, model))
+          complete(HttpEntity(ContentTypes.`application/json`, data))
         }
       }
     }
@@ -84,9 +86,9 @@ trait Routes extends JsonSupport {
     path("data" / "about") {
       pathEndOrSingleSlash {
         get {
-          val model = AboutViewModel("About page").toJson.compactPrint
+          val data = new AboutViewModel("About page").toJson.compactPrint
           log.info(s"Request: route=/data/about, method=get")
-          complete(HttpEntity(ContentTypes.`application/json`, model))
+          complete(HttpEntity(ContentTypes.`application/json`, data))
         }
       }
     }

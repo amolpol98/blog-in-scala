@@ -1,4 +1,6 @@
 import React from 'react';
+import TitleBar from '../browser/TitleBar.jsx';
+
 class Home extends React.Component {
     constructor(props) {
         super(props);
@@ -26,12 +28,15 @@ class Home extends React.Component {
             console.error(`Cannot fetch data from the server: url=${url}, error=${error.message}`)
         });
     }
-    componentDidMount = () => {
+    componentDidMount() {
         this.loadModelFromServer();
     }
     render() {
         return (
-            <h2>{this.state.model.greeting}</h2>
+            <div>
+                <TitleBar title={this.state.model.title} />
+                <h2>{this.state.model.greeting}</h2>
+            </div>
         );
     }
 }
